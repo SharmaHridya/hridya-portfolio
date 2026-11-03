@@ -6,6 +6,7 @@ import { cn } from '../../utils/format'
 import { Modal } from '../ui/Modal'
 import { RevealGroup, RevealItem } from '../ui/Reveal'
 import { DraftBadge } from '../ui/Tag'
+import { SlideDeck } from './SlideDeck'
 import { SubHeading } from './SubHeading'
 
 const TINTS = ['#3657D6', '#F28B54', '#B6A6D9', '#202124', '#b9b9b2']
@@ -85,6 +86,8 @@ export function Speaker() {
           </RevealItem>
         ))}
       </RevealGroup>
+
+      <SlideDeck />
 
       <Modal open={!!open} onClose={() => setOpen(null)} labelledBy="speaking-title" wide={open?.media?.type === 'video'}>
         {open && (

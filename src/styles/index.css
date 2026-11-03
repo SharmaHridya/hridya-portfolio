@@ -2,6 +2,7 @@
 @import '@fontsource-variable/dm-sans';
 @import '@fontsource-variable/dm-sans/wght-italic.css';
 @import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/caveat';
 @import 'tailwindcss';
 
 @theme {
@@ -20,6 +21,7 @@
   --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-hand: 'Caveat Variable', 'Segoe Print', cursive;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }

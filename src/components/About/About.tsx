@@ -3,6 +3,7 @@ import { personalityCards } from '../../data/interests'
 import { profile } from '../../data/profile'
 import { Reveal, RevealGroup, RevealItem } from '../ui/Reveal'
 import { SectionHeader } from '../ui/SectionHeader'
+import { DoodleBoard } from './DoodleBoard'
 import { Toolkit } from './Toolkit'
 
 const BIO = [
@@ -46,6 +47,8 @@ export function About() {
                 <p className="serif-italic text-xl text-ink">I don’t have everything figured out, and that’s probably the fun part.</p>
               </Reveal>
             </div>
+
+            <DoodleBoard />
 
             <RevealGroup className="mt-14 grid gap-4 sm:grid-cols-2" gap={0.07}>
               {personalityCards.map((card) => (
