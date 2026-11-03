@@ -4,6 +4,7 @@ import { rabbitHoles } from '../../data/interests'
 import { cn } from '../../utils/format'
 import { DraftBadge } from '../ui/Tag'
 import { SubHeading } from './SubHeading'
+import { WordsThatStayed } from './WordsThatStayed'
 
 const CATEGORY_TINT: Record<string, string> = {
   Technology: '#3657D6',
@@ -17,7 +18,8 @@ const CATEGORY_TINT: Record<string, string> = {
 const TILT = [-1.2, 0.8, -0.4, 1.1, -0.9, 0.5]
 
 export function RabbitHoles() {
-  const categories = ['All', ...new Set(rabbitHoles.map((r) => r.category))]
+  // "Beyond engineering" is the book of quotations below, not a scrapbook entry.
+  const categories = ['All', ...new Set(rabbitHoles.map((r) => r.category)), 'Beyond engineering']
   const [cat, setCat] = useState('All')
   const list = cat === 'All' ? rabbitHoles : rabbitHoles.filter((r) => r.category === cat)
 
@@ -45,6 +47,8 @@ export function RabbitHoles() {
           </button>
         ))}
       </div>
+
+      {(cat === 'All' || cat === 'Beyond engineering') && <WordsThatStayed />}
 
       <ul className="columns-1 gap-5 sm:columns-2 lg:columns-3">
         {list.map((r, i) => (

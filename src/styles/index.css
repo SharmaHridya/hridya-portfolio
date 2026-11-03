@@ -3,6 +3,8 @@
 @import '@fontsource-variable/dm-sans/wght-italic.css';
 @import '@fontsource-variable/jetbrains-mono';
 @import '@fontsource-variable/caveat';
+@import '@fontsource-variable/eb-garamond';
+@import '@fontsource-variable/eb-garamond/wght-italic.css';
 @import 'tailwindcss';
 
 @theme {
@@ -22,6 +24,16 @@
   --font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-hand: 'Caveat Variable', 'Segoe Print', cursive;
+  --font-serif: 'EB Garamond Variable', Garamond, 'Times New Roman', serif;
+
+  /* "Words that stayed": a reading-journal palette used only in that section. */
+  --color-ivory: #f5efe3;
+  --color-parchment: #fbf7ef;
+  --color-beige: #e8dcc6;
+  --color-espresso: #3a2a1f;
+  --color-sepia: #6f5f50;
+  --color-olive: #5f6440;
+  --color-gold: #a8884f;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }

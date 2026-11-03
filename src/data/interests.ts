@@ -59,11 +59,4 @@ export const rabbitHoles: RabbitHole[] = [
     date: 'Nov 2026',
     seeded: true,
   },
-  {
-    title: 'Something from outside engineering',
-    description: 'A book, a documentary, a debate motion or a historical rabbit hole. Add it here.',
-    category: 'Beyond engineering',
-    date: '—',
-    placeholder: true,
-  },
 ]

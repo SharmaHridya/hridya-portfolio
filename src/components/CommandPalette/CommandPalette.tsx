@@ -54,7 +54,7 @@ function Palette({ onClose }: { onClose: () => void }) {
       { id: 'lab', group: 'Navigate', label: 'Open Curiosity Lab', keywords: 'learning topics', icon: <FlaskConical />, run: section('lab') },
       { id: 'ml', group: 'Navigate', label: 'Try the ML Playground', keywords: 'gradient descent regression machine learning', icon: <Sparkles />, run: section('ml-playground') },
       { id: 'workspace', group: 'Navigate', label: 'Live GitHub & LeetCode', keywords: 'commits repos stats', icon: <Layers />, run: section('workspace') },
-      { id: 'beyond', group: 'Navigate', label: 'Beyond Code', keywords: 'debate speaking mun rabbit holes', icon: <MessageCircle />, run: section('beyond') },
+      { id: 'beyond', group: 'Navigate', label: 'Beyond Code', keywords: 'debate speaking mun rabbit holes books quotes words that stayed', icon: <MessageCircle />, run: section('beyond') },
       { id: 'journey', group: 'Navigate', label: 'My Journey', keywords: 'timeline milestones', icon: <BookOpen />, run: section('journey') },
       ...projects.map((p) => ({
         id: `p-${p.slug}`,
