@@ -90,7 +90,14 @@ function Portrait() {
     <figure className="sticky top-24">
       <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] border border-line bg-paper-deep">
         {profile.photo ? (
-          <img src={profile.photo} alt={`Portrait of ${profile.name}`} className="size-full object-cover" loading="lazy" width={800} height={1000} />
+          <img
+            src={profile.photo}
+            alt={`${profile.name} leaning on a boulder by a mountain river, smiling, in a yellow dress`}
+            className="size-full object-cover object-[62%_45%] transition-transform duration-700 hover:scale-[1.02]"
+            loading="lazy"
+            width={1250}
+            height={1666}
+          />
         ) : (
           <div className="grid-paper flex size-full flex-col justify-between p-6">
             <span className="label">Portrait · placeholder</span>

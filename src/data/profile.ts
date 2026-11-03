@@ -11,8 +11,8 @@ export const profile = {
   currentlyExploring: 'Machine Learning & AI',
   email: 'hridyas.ic.25@nitj.ac.in',
   resume: '/Hridya-Sharma-Resume.pdf',
-  // Set to an image in /public (e.g. '/profile.jpg') to replace the placeholder portrait.
-  photo: null as string | null,
+  // An image in /public; set to null to show the typographic placeholder instead.
+  photo: '/profile.webp' as string | null,
   links: {
     github: 'https://github.com/SharmaHridya',
     linkedin: 'https://www.linkedin.com/in/hridya-sharma-572b1b394/',

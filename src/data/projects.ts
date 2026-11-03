@@ -25,6 +25,7 @@ export type Project = {
   accent: string
   links: { label: string; url: string; kind: 'github' | 'live' | 'docs' }[]
   facts?: { value: string; label: string }[]
+  demo?: { src: string; poster: string; caption: string }
   factsSource?: { label: string; url: string }
   caseStudy: {
     overview: string[]
@@ -49,11 +50,11 @@ export const projects: Project[] = [
     role: 'Built and deployed end to end',
     summary:
       'A full-stack e-commerce app with a FastAPI and PostgreSQL backend and a React storefront: JWT accounts, a product catalogue, cart, checkout, reviews and an admin console, deployed across Vercel, Render and Neon.',
-    stack: ['Python', 'FastAPI', 'SQLAlchemy', 'Alembic', 'PostgreSQL', 'JWT', 'bcrypt', 'React', 'Vite', 'Tailwind CSS', 'REST APIs'],
+    stack: ['Python', 'FastAPI', 'SQLAlchemy 2.x', 'Alembic', 'Pydantic v2', 'PostgreSQL', 'JWT', 'bcrypt', 'React', 'Vite', 'Tailwind CSS'],
     highlights: [
-      'Atomic checkout with SELECT … FOR UPDATE row locking, so two buyers can never take the last unit',
+      'Atomic checkout with SELECT … FOR UPDATE row locking, plus server-side stock checks on every cart change, so the last unit can’t be oversold',
       'Idempotent mock payments and inventory management with low-stock alerts',
-      'Reviews restricted to verified purchases; admin routes guarded by role',
+      'JWT access and refresh tokens, role-based access for customer and admin routes, and verified-purchase reviews',
     ],
     visual: 'cartverse',
     accent: '#3657D6',
@@ -64,7 +65,7 @@ export const projects: Project[] = [
     ],
     caseStudy: {
       overview: [
-        'CartVerse is a complete shop: customers register, browse products, fill a cart, check out and track their orders; admins manage products, categories and stock, and see low-stock alerts and incoming orders.',
+        'CartVerse is a complete shop: customers register, browse a catalogue with category filters and pagination, fill a cart, check out and track their orders; admins manage products, categories and stock, and see low-stock alerts and incoming orders.',
         'The backend is FastAPI with SQLAlchemy models, Pydantic schemas and Alembic migrations on PostgreSQL (hosted on Neon). The frontend is React with Vite, React Router, Context API and Axios, styled with Tailwind and an interactive Spline landing page. The API runs on Render and the storefront on Vercel.',
       ],
       problem: [
@@ -75,7 +76,7 @@ export const projects: Project[] = [
         caption: 'Request path from the storefront to the database. Every protected route resolves the user from the JWT first.',
         lanes: [
           { label: 'Client · Vercel', nodes: ['React + Vite', 'Context API (auth, cart)', 'Axios + JWT header'] },
-          { label: 'API · Render', nodes: ['FastAPI routers', 'Pydantic schemas', 'Auth dependencies (user / admin)'] },
+          { label: 'API · Render', nodes: ['Routes → schemas → CRUD → services', 'Pydantic v2 validation', 'Auth dependencies (user / admin)'] },
           { label: 'Domain', nodes: ['Catalogue & cart', 'Checkout transaction', 'Payments · reviews'] },
           { label: 'Data · Neon', nodes: ['SQLAlchemy models', 'Alembic migrations', 'PostgreSQL'] },
         ],
@@ -91,7 +92,7 @@ export const projects: Project[] = [
         },
         {
           title: 'Stateless auth with a role check',
-          body: 'Passwords are hashed with bcrypt and sessions are JWTs. Admin-only routes depend on a dependency that checks is_admin, so authorization lives in one place instead of in every handler.',
+          body: 'Passwords are hashed with bcrypt, and sessions use short-lived JWT access tokens with refresh tokens. Admin-only routes depend on a dependency that checks the role, so authorization lives in one place instead of in every handler.',
         },
         {
           title: 'Versioned schema',
@@ -162,7 +163,7 @@ export const projects: Project[] = [
     kicker: 'AI/ML & Geospatial Technology',
     categories: ['AI/ML'],
     period: 'Jun – Jul 2026',
-    role: 'Hackathon prototype',
+    role: 'Team of 4 · ISRO BAH 2026 prototype',
     summary:
       'A geospatial decision-support dashboard that maps land surface temperature over Delhi NCR from Landsat 8, overlays Sentinel-2 vegetation cover, flags heat hotspots and lets you test cooling strategies.',
     stack: ['Python', 'Google Earth Engine', 'Landsat 8', 'Sentinel-2', 'Streamlit', 'Folium', 'Geospatial data'],
@@ -176,7 +177,7 @@ export const projects: Project[] = [
     links: [{ label: 'Source', url: 'https://github.com/SharmaHridya/BAH-DATA', kind: 'github' }],
     caseStudy: {
       overview: [
-        'Built as a prototype for ISRO’s Bharatiya Antariksh Hackathon 2026. The dashboard pulls satellite-derived thermal observations through Google Earth Engine, maps them over Delhi NCR and highlights five monitored hotspots: Najafgarh, Bawana Industrial Area, Okhla Industrial Estate, Palam Airport Region and Badarpur.',
+        'Built by a team of four as a prototype for ISRO’s Bharatiya Antariksh Hackathon 2026. The dashboard pulls Landsat 8 Collection 2 Level 2 thermal observations through Google Earth Engine, maps them over Delhi NCR and highlights five monitored hotspots: Najafgarh, Bawana Industrial Area, Okhla Industrial Estate, Palam Airport Region and Badarpur.',
         'A vegetation layer (NDVI from Sentinel-2) sits beside the temperature layer, and an intervention sandbox estimates how much cooling extra tree canopy, cool roofs or higher surface albedo could bring.',
       ],
       problem: [
@@ -215,7 +216,7 @@ export const projects: Project[] = [
     role: 'Built for a finance use case at 180 Degrees Consulting',
     summary:
       'Describe a product in plain English and get the most likely HSN/SAC code, its GST rate and a ranked shortlist with reasons. Vector search does the matching; an LLM only reranks and explains.',
-    stack: ['Python', 'Django', 'PostgreSQL', 'pgvector', 'Jina embeddings', 'LLM reranking', 'React', 'Tailwind CSS'],
+    stack: ['Python', 'Django REST Framework', 'PostgreSQL', 'pgvector', 'Jina AI embeddings', 'LLM API', 'React', 'Tailwind CSS'],
     highlights: [
       'Retrieval first: descriptions are embedded and matched against HSN/SAC entries in pgvector',
       'The LLM sees only the top candidates, so it reorders and explains but cannot invent codes',
@@ -240,7 +241,7 @@ export const projects: Project[] = [
           { label: 'Input', nodes: ['Product description', 'Validation'] },
           { label: 'Retrieve', nodes: ['Embed (Jina AI)', 'pgvector top-K search', 'Similarity gate'] },
           { label: 'Rerank', nodes: ['LLM reorders candidates', 'Writes reasoning'] },
-          { label: 'Output', nodes: ['Code + GST rate', 'Confidence & ambiguity', 'React UI'] },
+          { label: 'Output', nodes: ['POST /api/match/', 'Code + GST rate + confidence', 'React UI on Netlify'] },
         ],
       },
       decisions: [
@@ -279,6 +280,11 @@ export const projects: Project[] = [
       { value: '193', label: 'automated tests' },
     ],
     factsSource: { label: 'Measured by the team · RESULTS.md', url: 'https://github.com/guptakaran0720/Minimol-2026/blob/main/docs/RESULTS.md' },
+    demo: {
+      src: '/media/minimol-demo.mp4',
+      poster: '/media/minimol-demo-poster.jpg',
+      caption: 'Demo film (2:13) of the Chunky dashboard running on a live cluster.',
+    },
     links: [{ label: 'Team repo', url: 'https://github.com/guptakaran0720/Minimol-2026', kind: 'github' }],
     caseStudy: {
       overview: [

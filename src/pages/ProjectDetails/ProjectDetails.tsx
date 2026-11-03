@@ -107,6 +107,15 @@ export default function ProjectDetails() {
           <ProjectVisual kind={project.visual} />
         </motion.div>
 
+        {project.demo && (
+          <figure id="demo" className="mt-10 scroll-mt-24">
+            <div className="overflow-hidden rounded-[20px] border border-line bg-ink">
+              <video src={project.demo.src} poster={project.demo.poster} controls playsInline preload="none" className="aspect-video w-full" aria-label={`${project.title} demo film`} />
+            </div>
+            <figcaption className="mt-3 font-mono text-xs text-muted">Fig. — {project.demo.caption}</figcaption>
+          </figure>
+        )}
+
         <div className="sticky top-16 z-20 -mx-[clamp(1.25rem,4vw,3rem)] mt-16 border-y border-line bg-paper/90 px-[clamp(1.25rem,4vw,3rem)] backdrop-blur-md">
           <div role="tablist" aria-label="Case study sections" className="flex gap-1 overflow-x-auto py-2">
             {TABS.map((t, i) => (

@@ -53,7 +53,7 @@ export const milestones: Milestone[] = [
     when: 'Jun – Jul 2026',
     year: '2026',
     title: 'ISRO Bharatiya Antariksh Hackathon',
-    description: 'Prototyped the Urban Heat Mitigation Simulator with satellite data and Earth Engine.',
+    description: 'Prototyped the Urban Heat Mitigation Simulator with a team of four, using satellite data and Earth Engine.',
     related: { label: 'Urban Heat Simulator', href: '/projects/urban-heat-simulator' },
     tags: ['Hackathon', 'Geospatial'],
   },

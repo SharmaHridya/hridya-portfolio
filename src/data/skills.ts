@@ -11,11 +11,21 @@ export const skillGroups: SkillGroup[] = [
   { label: 'Languages', items: [using('C++'), using('Python'), using('JavaScript'), using('C'), using('SQL')] },
   {
     label: 'Web',
-    items: [using('React'), using('Redux Toolkit'), using('Tailwind CSS'), using('HTML & CSS'), using('Node.js'), using('Express.js')],
+    items: [using('React'), using('Vite'), using('Redux Toolkit'), using('Tailwind CSS'), using('HTML & CSS'), using('Node.js'), using('Express.js')],
   },
   {
     label: 'Backend & data',
-    items: [using('FastAPI'), using('PostgreSQL'), using('SQLAlchemy'), using('Alembic'), using('MongoDB'), using('REST APIs'), learning('Django')],
+    items: [
+      using('FastAPI'),
+      using('Django REST Framework'),
+      using('JWT auth'),
+      using('PostgreSQL'),
+      using('pgvector'),
+      using('SQLAlchemy'),
+      using('Alembic'),
+      using('MongoDB'),
+      using('REST APIs'),
+    ],
   },
   {
     label: 'Data & ML',
@@ -26,9 +36,14 @@ export const skillGroups: SkillGroup[] = [
       using('Streamlit'),
       using('Folium'),
       using('Google Earth Engine'),
+      using('Vector embeddings'),
+      using('LLM APIs'),
       learning('scikit-learn'),
       learning('OpenCV (basics)'),
     ],
   },
-  { label: 'Tools', items: [using('Git & GitHub'), using('Vercel'), using('Render'), using('Appwrite'), using('Figma')] },
+  {
+    label: 'Tools',
+    items: [using('Git & GitHub'), using('Docker'), using('Vercel'), using('Render'), using('Netlify'), using('Jupyter'), using('Appwrite'), using('Figma')],
+  },
 ]
