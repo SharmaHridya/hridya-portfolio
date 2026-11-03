@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://hridya-sharma.vercel.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://hridya-sharma.vercel.app/projects/cartverse</loc><priority>0.8</priority></url>
+  <url><loc>https://hridya-sharma.vercel.app/projects/inkwell</loc><priority>0.8</priority></url>
+  <url><loc>https://hridya-sharma.vercel.app/projects/urban-heat-simulator</loc><priority>0.8</priority></url>
+  <url><loc>https://hridya-sharma.vercel.app/projects/hsn-matcher</loc><priority>0.8</priority></url>
+  <url><loc>https://hridya-sharma.vercel.app/projects/p2p-cloud-storage</loc><priority>0.8</priority></url>
+</urlset>

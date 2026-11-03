@@ -1,0 +1,157 @@
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/dm-sans';
+@import '@fontsource-variable/dm-sans/wght-italic.css';
+@import '@fontsource-variable/jetbrains-mono';
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: #f8f7f2;
+  --color-paper-deep: #f0eee6;
+  --color-ink: #202124;
+  /* Spec asks for #777777; darkened slightly so small text meets WCAG AA on the paper background. */
+  --color-muted: #6b6b6b;
+  --color-cobalt: #3657d6;
+  --color-cobalt-deep: #2a46b3;
+  --color-tangerine: #f28b54;
+  --color-lavender: #b6a6d9;
+  --color-card: #ffffff;
+  --color-line: #e5e5e0;
+
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-cobalt);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cobalt);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+  /* Sections receive programmatic focus after in-page navigation; no ring needed there. */
+  section[tabindex='-1']:focus {
+    outline: none;
+  }
+}
+
+@layer components {
+  /* Small uppercase section identifiers, e.g. "§ 02 — PROJECTS". */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .serif-italic {
+    font-family: var(--font-sans);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+  }
+  .container-x {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+  /* Faint engineering-paper grid used behind a few visuals. */
+  .grid-paper {
+    background-image:
+      linear-gradient(to right, rgb(32 33 36 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(32 33 36 / 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-expo);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(54 87 214 / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(54 87 214 / 0);
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.dash-flow {
+  stroke-dasharray: 4 8;
+  animation: dash-flow 1.6s linear infinite;
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(220%);
+  }
+}
+.scroll-cue {
+  animation: scroll-cue 1.8s var(--ease-out-expo) infinite;
+}
