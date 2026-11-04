@@ -20,7 +20,23 @@ export function Journey() {
           label="My journey · a work in progress"
           title={
             <>
-              Still figuring things out. <span className="serif-italic text-cobalt">Still building.</span>
+              Still figuring things out. Still{' '}
+              <span className="relative inline-block">
+                building.
+                <svg viewBox="0 0 200 14" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-3 w-full overflow-visible" aria-hidden>
+                  <motion.path
+                    d="M2 9 C 40 4, 80 12, 120 7 S 180 5, 198 8"
+                    fill="none"
+                    stroke="#3657D6"
+                    strokeWidth={4}
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 0.72 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.6, delay: 0.5, ease: 'easeInOut' }}
+                  />
+                </svg>
+              </span>
             </>
           }
           intro={<p>Months are taken from GitHub history. The list grows as the work does.</p>}

@@ -1,16 +1,26 @@
 import { useReducedMotion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { processStages } from '../../data/process'
+import { openProcessStage } from '../../hooks/useProcessStage'
 import { useScrollTo } from '../../hooks/useScrollTo'
 
-type Word = { id: string; text: string; size: number; depth: number; caption: string; target: string; color: string }
+type Word = { id: string; text: string; size: number; depth: number; caption: string; color: string }
 
-const WORDS: Word[] = [
-  { id: 'question', text: 'QUESTION', size: 46, depth: 1.0, caption: 'Every project starts with one.', target: 'beyond', color: '#202124' },
-  { id: 'explore', text: 'EXPLORE', size: 34, depth: 0.6, caption: 'Read, poke, follow the rabbit hole.', target: 'lab', color: '#3657D6' },
-  { id: 'experiment', text: 'EXPERIMENT', size: 27, depth: 1.3, caption: 'Change one thing. Watch what breaks.', target: 'ml-playground', color: '#202124' },
-  { id: 'build', text: 'BUILD', size: 52, depth: 0.8, caption: 'CartVerse, Inkwell, HSN Matcher, a P2P cluster…', target: 'projects', color: '#202124' },
-  { id: 'learn', text: 'LEARN', size: 38, depth: 1.1, caption: 'Still figuring things out. Still building.', target: 'journey', color: '#202124' },
+// The same five stages as "How I think" (src/data/process.ts); only the typography lives here.
+const LOOK = [
+  { size: 46, depth: 1.0, color: '#202124' },
+  { size: 36, depth: 0.6, color: '#3657D6' },
+  { size: 27, depth: 1.3, color: '#202124' },
+  { size: 52, depth: 0.8, color: '#202124' },
+  { size: 38, depth: 1.1, color: '#202124' },
 ]
+
+const WORDS: Word[] = processStages.map((s, i) => ({
+  id: s.name.toLowerCase(),
+  text: s.name.toUpperCase(),
+  caption: s.summary,
+  ...LOOK[i % LOOK.length],
+}))
 
 const C = 300 // centre of the 600×600 canvas
 const R = 200
@@ -24,6 +34,10 @@ const BASE = WORDS.map((_, i) => {
 export function WordConstellation() {
   const reduced = useReducedMotion()
   const scrollTo = useScrollTo()
+  const openStage = (i: number) => {
+    scrollTo('process')
+    openProcessStage(i)
+  }
   const box = useRef<HTMLDivElement>(null)
   const target = useRef({ x: 0, y: 0 })
   const [offset, setOffset] = useState({ x: 0, y: 0 })
@@ -80,13 +94,13 @@ export function WordConstellation() {
   return (
     <div ref={box} className="relative aspect-square w-full overflow-hidden rounded-[28px] border border-line bg-card/60 grid-paper">
       <div className="pointer-events-none absolute inset-x-5 top-4 flex justify-between font-mono text-[0.65rem] tracking-wider text-muted uppercase">
-        <span>Fig. 01 — The loop</span>
+        <span>Fig. 01 — How I work</span>
         <span aria-hidden>
           x {offset.x.toFixed(2)} · y {offset.y.toFixed(2)}
         </span>
       </div>
 
-      <svg viewBox="0 0 600 600" className="absolute inset-0 size-full" role="group" aria-label="Five ideas in a loop: question, explore, experiment, build, learn. Select one to jump to the related section.">
+      <svg viewBox="0 0 600 600" className="absolute inset-0 size-full" role="group" aria-label={`My process as a loop: ${WORDS.map((w) => w.text.toLowerCase()).join(', ')}. Select a stage to read about it.`}>
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -146,11 +160,11 @@ export function WordConstellation() {
               onPointerLeave={() => setActive(null)}
               onFocus={() => setActive(w.id)}
               onBlur={() => setActive(null)}
-              onClick={() => scrollTo(w.target)}
+              onClick={() => openStage(i)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  scrollTo(w.target)
+                  openStage(i)
                 }
               }}
             >
@@ -186,7 +200,7 @@ export function WordConstellation() {
       </svg>
 
       <div className="pointer-events-none absolute inset-x-5 bottom-4 flex min-h-5 items-end justify-between gap-4 font-mono text-[0.7rem] text-ink/75" aria-live="polite">
-        <span>{caption ? `${caption.text} → ${caption.caption}` : 'Hover or tab through the loop'}</span>
+        <span>{caption ? `${caption.text} → ${caption.caption}` : 'My process in five words. Click one.'}</span>
       </div>
     </div>
   )

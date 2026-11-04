@@ -16,8 +16,8 @@ export const doodleSteps: DoodleStep[] = [
   { kind: 'path', d: 'M500 38 L508 61 L532 62 L513 76 L520 99 L500 85 L480 99 L487 76 L468 62 L492 61 Z', color: TANGERINE, width: 2.5 },
   { kind: 'text', text: 'I build full-stack apps & poke at ML', x: 70, y: 158, size: 34, color: INK },
   { kind: 'path', d: 'M670 70 L650 88 L670 106 M702 62 L688 114 M718 70 L738 88 L718 106', color: COBALT, width: 3 },
-  { kind: 'text', text: '230+ LeetCode problems, mostly in C++', x: 70, y: 218, size: 34, color: INK },
-  { kind: 'text', text: 'debater · MUN delegate · 180DC', x: 70, y: 278, size: 34, color: INK },
+  { kind: 'text', text: '240+ LeetCode problems, mostly in C++', x: 70, y: 218, size: 34, color: INK },
+  { kind: 'text', text: 'currently: teaching machines to fit lines', x: 70, y: 278, size: 34, color: INK },
   { kind: 'text', text: 'always asking:', x: 70, y: 338, size: 34, color: INK },
   { kind: 'text', text: 'but why?', x: 292, y: 340, size: 42, color: COBALT },
   {

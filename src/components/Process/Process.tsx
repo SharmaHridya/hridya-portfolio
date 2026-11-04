@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { easeOutExpo } from '../../animations/variants'
 import { processStages } from '../../data/process'
+import { useProcessStageRequests } from '../../hooks/useProcessStage'
 import { cn } from '../../utils/format'
 import { SectionHeader } from '../ui/SectionHeader'
 
@@ -10,6 +11,15 @@ const GLYPHS = ['?', '⌕', '⚗', '▲', '“']
 
 export function Process() {
   const [active, setActive] = useState(0)
+  const [pulse, setPulse] = useState(0)
+
+  // A word clicked in the hero loop opens its stage here.
+  useProcessStageRequests(
+    useCallback((i: number) => {
+      setActive(i)
+      setPulse((p) => p + 1)
+    }, []),
+  )
   const stage = processStages[active]
 
   return (
@@ -24,7 +34,7 @@ export function Process() {
               From questions <span className="serif-italic text-cobalt">to creations.</span>
             </>
           }
-          intro={<p>Five stages I keep coming back to, traced through one real project: the Urban Heat Mitigation Simulator.</p>}
+          intro={<p>The five words from the top of the page, traced through one real project: the Urban Heat Mitigation Simulator. Pick a stage, here or up there.</p>}
         />
 
         {/* Stage selector: a horizontal track on desktop, a vertical list on mobile */}
@@ -77,7 +87,18 @@ export function Process() {
           })}
         </div>
 
-        <div id="stage-panel" role="tabpanel" aria-labelledby={`stage-tab-${active}`} className="mt-10 overflow-hidden rounded-[24px] border border-line bg-card">
+        <div id="stage-panel" role="tabpanel" aria-labelledby={`stage-tab-${active}`} className="relative mt-10 overflow-hidden rounded-[24px] border border-line bg-card">
+          {/* A brief ring when a stage is opened from the hero, so the eye lands here */}
+          {pulse > 0 && (
+            <motion.span
+              key={pulse}
+              className="pointer-events-none absolute inset-0 z-10 rounded-[24px] ring-2 ring-cobalt ring-inset"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 0 }}
+              transition={{ duration: 1.4, delay: 0.9 }}
+              aria-hidden
+            />
+          )}
           <AnimatePresence mode="wait">
             <motion.div
               key={active}

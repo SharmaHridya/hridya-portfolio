@@ -1,9 +1,11 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, ListChecks, MousePointerClick } from 'lucide-react'
+import { ArrowDown, ChevronLeft, ChevronRight, ListChecks, MousePointerClick } from 'lucide-react'
 import { useReducer, useRef, type KeyboardEvent, type PointerEvent } from 'react'
 import { easeOutExpo } from '../../animations/variants'
 import { slides } from '../../data/slides'
+import { useScrollTo } from '../../hooks/useScrollTo'
 import { cn } from '../../utils/format'
+import { SlideDiagram } from './SlideDiagram'
 
 const BOX = 'M4 5 C 9 3.6, 15 4.4, 20 5 C 21 10, 20.6 15, 20 20 C 14 21, 9 20.6, 4 20 C 3.2 15, 3.4 10, 4 5'
 const TICK = 'M6.5 12.5 L 10.5 17 L 21 3.5'
@@ -32,13 +34,14 @@ function deckReducer(state: Deck, action: Action): Deck {
 }
 
 /**
- * A pocket presentation: each click (or Space / →) draws the next point onto the slide.
- * After the last point, the next click moves on to the next slide.
+ * A pocket lecture on gradient descent: each click (or Space / →) draws the next point onto the
+ * slide and advances its diagram. After the last point, the next click moves on to the next slide.
  */
 export function SlideDeck() {
   const reduced = useReducedMotion()
   const [{ index, shown, dir }, dispatch] = useReducer(deckReducer, { index: 0, shown: 0, dir: 1 })
   const laser = useRef<HTMLSpanElement>(null)
+  const scrollTo = useScrollTo()
   const slide = slides[index]
   const complete = shown >= slide.items.length
   const isLast = index === slides.length - 1
@@ -47,6 +50,8 @@ export function SlideDeck() {
   const prev = () => dispatch({ type: 'prev' })
 
   const onKey = (e: KeyboardEvent) => {
+    // Keys pressed on a button inside the slide belong to that button.
+    if (e.target !== e.currentTarget && (e.target as HTMLElement).closest('button, a')) return
     if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault()
       next()
@@ -74,8 +79,8 @@ export function SlideDeck() {
     <div className="mt-16">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="label">Fig. — a pocket presentation</p>
-          <h4 className="mt-1 text-2xl font-semibold md:text-3xl">Four slides, drawn live.</h4>
+          <p className="label">Fig. — a pocket lecture</p>
+          <h4 className="mt-1 text-2xl font-semibold md:text-3xl">How I’d explain gradient descent, in four slides.</h4>
         </div>
         <p className="flex items-center gap-1.5 font-mono text-[0.7rem] text-muted">
           <MousePointerClick className="size-3.5" aria-hidden /> click the slide · space / ← →
@@ -85,13 +90,13 @@ export function SlideDeck() {
       <div
         role="group"
         aria-roledescription="slide deck"
-        aria-label={`Pocket presentation, slide ${index + 1} of ${slides.length}: ${slide.title}. Press Space or the right arrow to draw the next point.`}
+        aria-label={`Pocket lecture, slide ${index + 1} of ${slides.length}: ${slide.title}. Press Space or the right arrow to draw the next point.`}
         tabIndex={0}
         onKeyDown={onKey}
         onClick={next}
         onPointerMove={onPointerMove}
         onPointerLeave={hideLaser}
-        className="group relative flex min-h-[560px] cursor-pointer flex-col overflow-hidden rounded-[24px] border border-ink bg-card shadow-[0_40px_80px_-50px_rgba(32,33,36,0.5)] select-none lg:aspect-[2/1] lg:min-h-0 [@media(pointer:fine)]:cursor-none"
+        className="group relative flex min-h-[680px] cursor-pointer flex-col overflow-hidden rounded-[24px] border border-ink bg-card shadow-[0_40px_80px_-50px_rgba(32,33,36,0.5)] select-none lg:aspect-[2/1] lg:min-h-0 [@media(pointer:fine)]:cursor-none"
       >
         <span
           ref={laser}
@@ -119,8 +124,8 @@ export function SlideDeck() {
               </span>
             </div>
 
-            <div className="mt-5 grid flex-1 gap-8 lg:grid-cols-12 lg:gap-12">
-              <div className="lg:col-span-5">
+            <div className="mt-5 grid flex-1 gap-6 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-6">
                 <h5 className="relative inline-block font-display text-[clamp(1.9rem,4vw,3.6rem)] leading-[1.02] font-semibold tracking-tight">
                   {slide.title}
                   <svg viewBox="0 0 300 12" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3 w-full overflow-visible" aria-hidden>
@@ -136,68 +141,83 @@ export function SlideDeck() {
                     />
                   </svg>
                 </h5>
-                <p className="mt-8 hidden font-display text-[7rem] leading-none font-bold text-ink/[0.05] lg:block" aria-hidden>
-                  {String(index + 1).padStart(2, '0')}
-                </p>
+
+                <ul className="mt-10 space-y-2.5 sm:space-y-3">
+                  <AnimatePresence initial={false}>
+                    {slide.items.slice(0, shown).map((item) => (
+                      <motion.li
+                        key={item.text}
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0, x: -10, transition: { duration: 0.2 } }}
+                        className="flex items-start gap-3"
+                      >
+                        <svg viewBox="0 0 24 24" className="mt-1 size-6 shrink-0 overflow-visible sm:size-7" aria-hidden>
+                          <motion.path
+                            d={BOX}
+                            fill="none"
+                            stroke="#202124"
+                            strokeOpacity={0.55}
+                            strokeWidth={1.6}
+                            strokeLinecap="round"
+                            initial={{ pathLength: reduced ? 1 : 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.35, ease: 'easeOut' }}
+                          />
+                          <motion.path
+                            d={TICK}
+                            fill="none"
+                            stroke={slide.accent === '#202124' ? '#3657D6' : slide.accent}
+                            strokeWidth={2.6}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            initial={{ pathLength: reduced ? 1 : 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.3, delay: 0.3, ease: 'easeOut' }}
+                          />
+                        </svg>
+                        <span className="min-w-0">
+                          <motion.span
+                            className="block font-[family-name:var(--font-hand)] text-[clamp(1.45rem,2.6vw,2.1rem)] leading-tight font-semibold"
+                            initial={{ clipPath: reduced ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)' }}
+                            animate={{ clipPath: 'inset(0 0% 0 0)' }}
+                            transition={{ duration: Math.min(1.1, 0.25 + item.text.length * 0.035), delay: 0.2, ease: 'linear' }}
+                          >
+                            {item.text}
+                          </motion.span>
+                          {item.action === 'playground' && (
+                            <motion.button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                scrollTo('ml-playground')
+                              }}
+                              className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-1 text-xs text-paper hover:bg-cobalt"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.6 }}
+                            >
+                              Open the ML playground <ArrowDown className="size-3" aria-hidden />
+                            </motion.button>
+                          )}
+                          {item.note && (
+                            <motion.span
+                              className="block text-sm text-muted"
+                              initial={{ opacity: 0, y: 4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: reduced ? 0 : 0.55 + Math.min(0.8, item.text.length * 0.03), duration: 0.35 }}
+                            >
+                              {item.note}
+                            </motion.span>
+                          )}
+                        </span>
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
               </div>
 
-              <ul className="space-y-2.5 sm:space-y-3 lg:col-span-7 lg:pt-1">
-                <AnimatePresence initial={false}>
-                  {slide.items.slice(0, shown).map((item) => (
-                    <motion.li
-                      key={item.text}
-                      initial={{ opacity: 1 }}
-                      exit={{ opacity: 0, x: -10, transition: { duration: 0.2 } }}
-                      className="flex items-start gap-3"
-                    >
-                      <svg viewBox="0 0 24 24" className="mt-1 size-6 shrink-0 overflow-visible sm:size-7" aria-hidden>
-                        <motion.path
-                          d={BOX}
-                          fill="none"
-                          stroke="#202124"
-                          strokeOpacity={0.55}
-                          strokeWidth={1.6}
-                          strokeLinecap="round"
-                          initial={{ pathLength: reduced ? 1 : 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 0.35, ease: 'easeOut' }}
-                        />
-                        <motion.path
-                          d={TICK}
-                          fill="none"
-                          stroke={slide.accent === '#202124' ? '#3657D6' : slide.accent}
-                          strokeWidth={2.6}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          initial={{ pathLength: reduced ? 1 : 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 0.3, delay: 0.3, ease: 'easeOut' }}
-                        />
-                      </svg>
-                      <span className="min-w-0">
-                        <motion.span
-                          className="block font-[family-name:var(--font-hand)] text-[clamp(1.45rem,2.6vw,2.1rem)] leading-tight font-semibold"
-                          initial={{ clipPath: reduced ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)' }}
-                          animate={{ clipPath: 'inset(0 0% 0 0)' }}
-                          transition={{ duration: Math.min(1.1, 0.25 + item.text.length * 0.035), delay: 0.2, ease: 'linear' }}
-                        >
-                          {item.text}
-                        </motion.span>
-                        {item.note && (
-                          <motion.span
-                            className="block text-sm text-muted"
-                            initial={{ opacity: 0, y: 4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: reduced ? 0 : 0.55 + Math.min(0.8, item.text.length * 0.03), duration: 0.35 }}
-                          >
-                            {item.note}
-                          </motion.span>
-                        )}
-                      </span>
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </ul>
+              <div className="flex items-center justify-center rounded-2xl bg-paper/60 p-4 lg:col-span-6">
+                <SlideDiagram kind={slide.diagram} shown={shown} accent={slide.accent} />
+              </div>
             </div>
 
             <div className="mt-4 flex items-center justify-between gap-3">

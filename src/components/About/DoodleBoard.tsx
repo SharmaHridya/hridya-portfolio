@@ -1,5 +1,5 @@
 import { useInView, useReducedMotion } from 'framer-motion'
-import { Eraser, PenLine, RotateCcw } from 'lucide-react'
+import { Eraser, PenLine, RotateCcw, Undo2 } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { doodleSteps } from '../../data/doodle'
 import { cn } from '../../utils/format'
@@ -13,6 +13,15 @@ const ENTER_MS = 700 // pen sliding in and out of the board
 const OFFSCREEN = { x: 900, y: 540 }
 
 type Pt = { x: number; y: number }
+type Stroke = { color: string; width: number; pts: Pt[] }
+
+// Visitor inks: the site's accents, plus a wide translucent highlighter.
+const INKS = [
+  { name: 'Cobalt pen', color: '#3657D6', width: 3 },
+  { name: 'Tangerine pen', color: '#F28B54', width: 3 },
+  { name: 'Ink pen', color: '#202124', width: 2.5 },
+  { name: 'Highlighter', color: 'rgba(242, 201, 76, 0.55)', width: 16 },
+]
 type Seg = { kind: 'move'; start: number; dur: number; from: Pt; to: Pt } | { kind: 'draw'; start: number; dur: number; step: number }
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
@@ -36,7 +45,8 @@ export function DoodleBoard() {
   const [t, setT] = useState(0)
   const [run, setRun] = useState(0)
   const [drawMode, setDrawMode] = useState(false)
-  const [strokes, setStrokes] = useState<Pt[][]>([])
+  const [strokes, setStrokes] = useState<Stroke[]>([])
+  const [ink, setInk] = useState(0)
   const live = useRef<Pt[] | null>(null)
 
   useEffect(() => {
@@ -154,13 +164,14 @@ export function DoodleBoard() {
     if (!drawMode) return
     e.currentTarget.setPointerCapture(e.pointerId)
     live.current = [toBoard(e)]
-    setStrokes((s) => [...s, live.current!])
+    const { color, width } = INKS[ink]
+    setStrokes((s) => [...s, { color, width, pts: live.current! }])
   }
   const onMove = (e: PointerEvent<SVGSVGElement>) => {
     if (!drawMode || !live.current) return
     live.current = [...live.current, toBoard(e)]
-    const current = live.current
-    setStrokes((s) => [...s.slice(0, -1), current])
+    const pts = live.current
+    setStrokes((s) => [...s.slice(0, -1), { ...s[s.length - 1], pts }])
   }
   const onUp = () => {
     live.current = null
@@ -251,13 +262,13 @@ export function DoodleBoard() {
             )
           })}
 
-          {strokes.map((pts, i) => (
+          {strokes.map((st, i) => (
             <path
               key={`u-${i}`}
-              d={pts.map((p, j) => `${j ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')}
+              d={st.pts.map((p, j) => `${j ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')}
               fill="none"
-              stroke="#3657D6"
-              strokeWidth={3}
+              stroke={st.color}
+              strokeWidth={st.width}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -290,10 +301,35 @@ export function DoodleBoard() {
         >
           <PenLine className="size-3.5" aria-hidden /> {drawMode ? 'Done drawing' : 'Your turn: doodle'}
         </button>
+        {drawMode && (
+          <div className="flex items-center gap-1.5 rounded-full border border-line bg-card px-2 py-1" role="radiogroup" aria-label="Ink">
+            {INKS.map((k, i) => (
+              <button
+                key={k.name}
+                role="radio"
+                aria-checked={ink === i}
+                aria-label={k.name}
+                title={k.name}
+                onClick={() => setInk(i)}
+                className={cn('grid size-6 place-items-center rounded-full transition-transform', ink === i ? 'scale-110 ring-2 ring-ink ring-offset-1' : 'hover:scale-110')}
+              >
+                <span className={cn('block rounded-full', i === 3 ? 'h-2 w-4' : 'size-3.5')} style={{ background: k.color }} />
+              </button>
+            ))}
+          </div>
+        )}
         {strokes.length > 0 && (
-          <button onClick={() => setStrokes([])} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted hover:text-ink">
-            <Eraser className="size-3.5" aria-hidden /> Clear my doodles
-          </button>
+          <>
+            <button
+              onClick={() => setStrokes((s) => s.slice(0, -1))}
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted hover:text-ink"
+            >
+              <Undo2 className="size-3.5" aria-hidden /> Undo
+            </button>
+            <button onClick={() => setStrokes([])} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted hover:text-ink">
+              <Eraser className="size-3.5" aria-hidden /> Clear my doodles
+            </button>
+          </>
         )}
       </figcaption>
     </figure>

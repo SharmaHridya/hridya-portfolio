@@ -105,12 +105,6 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <p className="hidden items-center gap-2 rounded-full border border-line bg-card/70 px-3 py-1.5 font-mono text-[0.68rem] text-ink/75 xl:flex">
-              <span className="pulse-dot size-1.5 rounded-full bg-cobalt" aria-hidden />
-              Currently exploring <span aria-hidden>→</span>
-              <span className="sr-only">:</span>
-              <span className="text-cobalt-deep">{profile.currentlyExploring}</span>
-            </p>
             <button
               onClick={palette.open}
               className="flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1.5 font-mono text-[0.72rem] text-ink/75 transition-colors hover:border-ink hover:text-ink"

@@ -17,7 +17,8 @@ export function CuriosityLab() {
           label="The curiosity lab"
           title={
             <>
-              Currently <span className="serif-italic text-cobalt">curious</span> about…
+              Currently{' '}
+              <span className="relative inline-block -rotate-2 font-hand text-[1.18em] font-semibold text-[#c25a22]">curious</span> about…
             </>
           }
           intro={

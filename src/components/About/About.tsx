@@ -119,8 +119,6 @@ function Portrait() {
         <span>Instrumentation & Control</span>
         <span className="text-muted">Year</span>
         <span>{profile.year}</span>
-        <span className="text-muted">Also</span>
-        <span>LADC · 180DC</span>
       </figcaption>
     </figure>
   )
